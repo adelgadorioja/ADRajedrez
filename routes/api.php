@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Partida;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,13 +14,31 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// RUTAS PARA LOGIN, REGISTRO Y LOGOUT
+Route::post('register', 'Auth\RegisterController@register');
+Route::post('login', 'Auth\LoginController@login');
+Route::post('logout', 'Auth\LoginController@logout');
 
 Route::group(['middleware' => ['auth:api']], function () {
     Route::get('test', function () {
         $user = \Auth::user();
         return $user;
+    });
+
+    Route::get('partida/{id_partida}', function($id_partida) {
+        try {
+            $partida = Partida::where('id_partida','=',$id_partida)->first();
+            $piezas = $partida->piezas;
+            $estado = "OK";
+            $mensaje = "Se ha obtenido la partida con éxito.";
+        } catch (Exception $e) {
+            $estado = "KO";
+            $mensaje = "Se ha producido un error al obtener la partida.";
+        }
+        return response()->json(
+            ['estado' => $estado,
+            'mensaje' => $mensaje,
+            'partida' => $partida
+        ]);
     });
 });
