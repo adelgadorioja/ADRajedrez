@@ -47,8 +47,13 @@ class LoginController extends Controller
             $user = $this->guard()->user();
             $user->generateToken();
 
+            $estado = "OK";
+            $mensaje = "Te has logueado con éxito.";
+
             return response()->json([
-                'data' => $user->toArray(),
+                'estado' => $estado,
+                'mensaje' => $mensaje,
+                'api_token' => $user['api_token']
             ]);
         }
 
