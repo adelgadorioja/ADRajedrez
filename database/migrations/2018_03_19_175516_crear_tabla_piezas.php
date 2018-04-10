@@ -17,12 +17,14 @@ class CrearTablaPiezas extends Migration
             // COLUMNAS
             $table->increments('id_pieza');
             $table->integer('id_partida')->unsigned();
+            $table->integer('id_usuario')->unsigned();
             $table->integer('color');
             $table->integer('fila');
             $table->integer('columna');
             $table->string('tipo');
             // FOREIGN KEYS
             $table->foreign('id_partida')->references('id_partida')->on('partidas');
+            $table->foreign('id_usuario')->references('id')->on('users');
         });
     }
 

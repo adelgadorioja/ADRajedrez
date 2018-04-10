@@ -16,13 +16,13 @@ class CrearTablaPartida extends Migration
         Schema::create('partidas', function (Blueprint $table) {
             // COLUMNAS
             $table->increments('id_partida');
-            $table->integer('jug_negras')->unsigned();
-            $table->integer('jug_blancas')->unsigned();
+            $table->integer('jugador1')->unsigned();
+            $table->integer('jugador2')->unsigned();
             $table->integer('turno');
             $table->date('fec_inicio');
             // FOREIGN KEYS
-            $table->foreign('jug_negras')->references('id')->on('users');
-            $table->foreign('jug_blancas')->references('id')->on('users');
+            $table->foreign('jugador1')->references('id')->on('users');
+            $table->foreign('jugador2')->references('id')->on('users');
         });
     }
 
