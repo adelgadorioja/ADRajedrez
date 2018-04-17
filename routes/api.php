@@ -68,8 +68,8 @@ Route::group(['middleware' => ['auth:api']], function () {
             $usuarioRival = $data['usuario-rival'];
             $usuarioCreador = \Auth::user()['id'];
             $partida = new Partida;
-                $partida['jug_negras'] = $usuarioRival;
-                $partida['jug_blancas'] = $usuarioCreador;
+                $partida['jugador1'] = $usuarioRival;
+                $partida['jugador2'] = $usuarioCreador;
                 $partida['turno'] = 1;
                 $partida['fec_inicio'] = date("Y-m-d");
             $partida->save();
