@@ -95,6 +95,7 @@ Route::group(['middleware' => ['auth:api']], function () {
             $JUGADOR_CORRECTO = 2;
             $JUGADOR_INCORRECTO = 1;
             $PIEZA_ERRONEA = 0;
+            $ERROR_TURNO = 3;
 
             $data = Input::all();
             $idPartida = $data['id_partida'];
@@ -105,7 +106,7 @@ Route::group(['middleware' => ['auth:api']], function () {
             // FALTA COMPROBACIÓN USUARIO
 
             $pieza = Pieza::where('id_pieza', '=', $idPieza)->where('id_partida', '=', $idPartida)->first();
-            $comprobacionJugador = comprobarMovimientoPorJugador($pieza);
+            $comprobacionJugador = comprobarMovimientoPorJugador($pieza, $idPartida);
             if($comprobacionJugador == $JUGADOR_CORRECTO) {
                 if(comprobarMovimiento($pieza, $nuevaFila, $nuevaColumna)) {
                     $pieza['fila'] = $nuevaFila;
@@ -124,7 +125,11 @@ Route::group(['middleware' => ['auth:api']], function () {
             } elseif($comprobacionJugador == $JUGADOR_INCORRECTO) {
                 $partida = null;
                 $estado = "KO";
-                $mensaje = "Pieza no correspondiente al jugador.";
+                $mensaje = "Esa pieza no te pertenece.";
+            } elseif($comprobacionJugador == $ERROR_TURNO) {
+                $partida = null;
+                $estado = "KO";
+                $mensaje = "No es tu turno.";
             } else {
                 $partida = null;
                 $estado = "KO";
@@ -205,13 +210,17 @@ Route::group(['middleware' => ['auth:api']], function () {
         }
     }
 
-    function comprobarMovimientoPorJugador($pieza) {
-        $estado = 0;
-        if($pieza != null) {
-            $estado = 2;
-            if($pieza['id_usuario'] != Auth::user()->id) {
-                $estado = 1;
+    function comprobarMovimientoPorJugador($pieza, $id_partida) {
+        $partida = Partida::where('id_partida', '=', $id_partida)->first();
+        $estado = 3;
+        if($partida['turno']%2 == 0 && $pieza['id_usuario'] == $partida['jugador1'] || $partida['turno']%2 != 0 && $pieza['id_usuario'] == $partida['jugador2']) {
+            if($pieza != null && $partida != null) {
+                $estado = 2;
+                if($pieza['id_usuario'] != Auth::user()->id) {
+                    $estado = 1;
+                }
             }
+            $estado = 0;
         }
         return $estado;
     }
