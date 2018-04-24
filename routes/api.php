@@ -100,7 +100,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
             // FALTA COMPROBACIÓN USUARIO
 
-            $pieza = Pieza::where('id_pieza', '=', $idPieza)->where('id_partida', '=', $idPartida)->first();
+            $pieza = Pieza::where('id_pieza', '=', $idPieza)->where('id_partida', '=', $idPartida)->where('id_jugador','=',\Auth::user()['id'])->first();
             if($pieza != null) {
                 if(comprobarMovimiento($pieza, $nuevaFila, $nuevaColumna)) {
                     $pieza['fila'] = $nuevaFila;
