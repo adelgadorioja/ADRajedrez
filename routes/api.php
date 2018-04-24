@@ -92,16 +92,21 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     Route::post('mover', function() {
         try {
+            $JUGADOR_CORRECTO = 2;
+            $JUGADOR_INCORRECTO = 1;
+            $PIEZA_ERRONEA = 0;
+
             $data = Input::all();
             $idPartida = $data['id_partida'];
             $idPieza = $data['id_pieza'];
             $nuevaFila = $data['fila'];
             $nuevaColumna = $data['columna'];
-
+            
             // FALTA COMPROBACIÓN USUARIO
 
             $pieza = Pieza::where('id_pieza', '=', $idPieza)->where('id_partida', '=', $idPartida)->first();
-            if(comprobarMovimientoPorJugador($pieza)) {
+            $comprobacionJugador = comprobarMovimientoPorJugador($pieza);
+            if($comprobacionJugador == $JUGADOR_CORRECTO) {
                 if(comprobarMovimiento($pieza, $nuevaFila, $nuevaColumna)) {
                     $pieza['fila'] = $nuevaFila;
                     $pieza['columna'] = $nuevaColumna;
@@ -116,6 +121,10 @@ Route::group(['middleware' => ['auth:api']], function () {
                     $estado = "KO";
                     $mensaje = "El movimiento no es correcto.";
                 }          
+            } elseif($comprobacionJugador == $JUGADOR_INCORRECTO) {
+                $partida = null;
+                $estado = "KO";
+                $mensaje = "Pieza no correspondiente al jugador.";
             } else {
                 $partida = null;
                 $estado = "KO";
@@ -197,10 +206,14 @@ Route::group(['middleware' => ['auth:api']], function () {
     }
 
     function comprobarMovimientoPorJugador($pieza) {
+        $estado = 0;
         if($pieza != null) {
-            return true;
+            if($pieza['id_jugador'] != \Auth::user()['id']) {
+                $estado = 1;
+            }
+            $estado = 2;
         }
-        return false;
+        return $estado;
     }
 
 });
