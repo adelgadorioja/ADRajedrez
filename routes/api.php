@@ -90,6 +90,23 @@ Route::group(['middleware' => ['auth:api']], function () {
         ]);
     });
 
+    Route::get('partidas-disponibles', function() {
+        try {
+            $partidas = Partida::where('id_usuario', '=', \Auth::user()->id)->get();
+            $estado = "OK";
+            $mensaje = "Se ha obtenido la lista de partidas con éxito.";
+        } catch (Exception $e) {
+            $partidas = null;
+            $estado = "KO";
+            $mensaje = $e->getMessage();
+        }
+        return response()->json(
+            ['estado' => $estado,
+            'mensaje' => $mensaje,
+            'partidas' => $partidas
+        ]);
+    });
+
     Route::post('mover', function() {
         try {
             $JUGADOR_CORRECTO = 2;
