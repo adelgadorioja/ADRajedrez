@@ -231,13 +231,13 @@ Route::group(['middleware' => ['auth:api']], function () {
         $partida = Partida::where('id_partida', '=', $id_partida)->first();
         $estado = 3;
         if($partida['turno']%2 == 0 && $pieza['id_usuario'] == $partida['jugador1'] || $partida['turno']%2 != 0 && $pieza['id_usuario'] == $partida['jugador2']) {
+            $estado = 0;
             if($pieza != null && $partida != null) {
                 $estado = 2;
                 if($pieza['id_usuario'] != Auth::user()->id) {
                     $estado = 1;
                 }
             }
-            $estado = 0;
         }
         return $estado;
     }
