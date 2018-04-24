@@ -100,8 +100,8 @@ Route::group(['middleware' => ['auth:api']], function () {
 
             // FALTA COMPROBACIÓN USUARIO
 
-            $pieza = Pieza::where('id_pieza', '=', $idPieza)->where('id_partida', '=', $idPartida)->where('id_jugador','=',\Auth::user()['id'])->first();
-            if($pieza != null) {
+            $pieza = Pieza::where('id_pieza', '=', $idPieza)->where('id_partida', '=', $idPartida)->first();
+            if(comprobarMovimientoPorJugador($pieza)) {
                 if(comprobarMovimiento($pieza, $nuevaFila, $nuevaColumna)) {
                     $pieza['fila'] = $nuevaFila;
                     $pieza['columna'] = $nuevaColumna;
@@ -194,6 +194,13 @@ Route::group(['middleware' => ['auth:api']], function () {
         if($pieza != null) {
             $piezaEliminada->delete();
         }
+    }
+
+    function comprobarMovimientoPorJugador($pieza) {
+        if($pieza != null) {
+            return true;
+        }
+        return false;
     }
 
 });
