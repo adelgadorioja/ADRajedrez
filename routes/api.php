@@ -209,7 +209,7 @@ Route::group(['middleware' => ['auth:api']], function () {
         $estado = 0;
         if($pieza != null) {
             $estado = 2;
-            if($pieza['id_jugador'] != \Auth::user()['id']) {
+            if($pieza['id_jugador'] != \Auth::user()['data']['id']) {
                 $estado = 1;
             }
         }
