@@ -130,7 +130,9 @@ Route::group(['middleware' => ['auth:api']], function () {
                     $pieza['columna'] = $nuevaColumna;
                     $pieza->save();
                     $partida = Partida::where('id_partida','=',$idPartida)->first();
+                    $partida['turno'] = $partida['turno'] + 1;
                     $partida->piezas;
+                    $partida->save();
                     $estado = "OK";
                     $mensaje = "Se ha realizado el movimiento con éxito.";
                 } else {
