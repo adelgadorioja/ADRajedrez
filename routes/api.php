@@ -92,7 +92,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     Route::get('partidas-disponibles', function() {
         try {
-            $partidas = Partida::where('id_usuario', '=', \Auth::user()->id)->get();
+            $partidas = Partida::where('jugador1', '=', \Auth::user()->id)->orWhere('jugador2', '=', \Auth::user()->id)->get();
             $estado = "OK";
             $mensaje = "Se ha obtenido la lista de partidas con éxito.";
         } catch (Exception $e) {
