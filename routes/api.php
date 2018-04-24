@@ -208,10 +208,10 @@ Route::group(['middleware' => ['auth:api']], function () {
     function comprobarMovimientoPorJugador($pieza) {
         $estado = 0;
         if($pieza != null) {
+            $estado = 2;
             if($pieza['id_jugador'] != \Auth::user()['id']) {
                 $estado = 1;
             }
-            $estado = 2;
         }
         return $estado;
     }
