@@ -47,7 +47,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     Route::get('en-espera', function() {
         try {
-            $usuarios = User::select('id', 'name', 'email')->where('api_token', '!=', null)->get();
+            $usuarios = User::select('id', 'name', 'email')->where('api_token', '!=', null)->where('id', '!=', Auth::user()->id)->get();
             $estado = "OK";
             $mensaje = "Se ha obtenido la lista de usuarios con éxito.";
         } catch (Exception $e) {
