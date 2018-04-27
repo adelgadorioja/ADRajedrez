@@ -107,6 +107,32 @@ Route::group(['middleware' => ['auth:api']], function () {
         ]);
     });
 
+    Route::post('de-quien-es-el-turno', function() {
+        try {
+            $data = Input::all();
+            $idPartida = $data['ìd_partida'];
+            $partida = Partida::where('id_partida', '=', $idPartida)->first();
+            $estado = "OK";
+        } catch (Exception $e) {
+            $estado = "KO";
+            $turno = -1;
+            $mensaje = $e->getMessage();
+        }
+        
+
+        if($partida['turno']%2 == 0 && Auth::user()->id == $partida['jugador1'] || $partida['turno']%2 != 0 && Auth::user()->id == $partida['jugador2']) {
+            $turno = 1;
+        } else {
+            $turno = 0;
+        }
+
+        return response()->json(
+            ['estado' => $estado,
+            'mensaje' => $mensaje,
+            'turno' => $turno
+        ]);
+    });
+
     Route::post('mover', function() {
         try {
             $JUGADOR_CORRECTO = 2;
