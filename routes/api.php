@@ -113,6 +113,7 @@ Route::group(['middleware' => ['auth:api']], function () {
             $idPartida = $data['id_partida'];
             $partida = Partida::where('id_partida', '=', $idPartida)->first();
             $estado = "OK";
+            $mensaje = "";
         } catch (Exception $e) {
             $estado = "KO";
             $turno = -1;
