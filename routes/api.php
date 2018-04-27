@@ -110,7 +110,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('de-quien-es-el-turno', function() {
         try {
             $data = Input::all();
-            $idPartida = $data['ìd_partida'];
+            $idPartida = $data['id_partida'];
             $partida = Partida::where('id_partida', '=', $idPartida)->first();
             $estado = "OK";
         } catch (Exception $e) {
